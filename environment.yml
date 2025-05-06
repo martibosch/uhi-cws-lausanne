@@ -1,0 +1,20 @@
+name: uhi-cws-lausanne
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - boto3=1.37.31
+  - contextily=1.6.2
+  - ipykernel
+  - meteora=0.5.0
+  - papermill
+  - pip
+  - pip:
+      - -e .
+      - swisstopopy=0.1.0
+  - pdal=2.8.4
+  - pre-commit
+  - python=3.12
+  - python-pdal=3.4.5
+  - snakemake
+  - ultraplot=1.10

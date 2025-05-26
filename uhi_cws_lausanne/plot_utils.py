@@ -126,7 +126,7 @@ def comparison_lineplots(
 def hourly_lineplot(
     ts_df: pd.DataFrame,
     *,
-    var_label: str = "T",
+    value_label: str = "T",
     ax: mpl.axes.Axes = None,
     legend: bool = True,
 ) -> mpl.axes.Axes:
@@ -136,7 +136,7 @@ def hourly_lineplot(
     # y = ts_df.columns[0]
     for heatwave, heatwave_ts_df in ts_df.groupby(level="heatwave"):
         heatwave_ts_df = heatwave_ts_df.stack(future_stack=True).reset_index(
-            name=var_label
+            name=value_label
         )
         sns.lineplot(
             # heatwave_ts_df.assign(
@@ -145,7 +145,7 @@ def hourly_lineplot(
             heatwave_ts_df.assign(**{"hour": heatwave_ts_df["time"].dt.hour}),
             x="hour",
             # y=y,
-            y=var_label,
+            y=value_label,
             ax=ax,
             label=heatwave,
             legend=legend,

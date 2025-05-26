@@ -35,12 +35,13 @@ rule agglom_extent:
 
 
 # 1.1. official weather stations -------------------------------------------------------
-
 OFFICIAL_DATA_IPYNB_BASENAME = "official-data.ipynb"
 
 
 rule official_data:
     input:
+        official_ts_df=path.join(DATA_RAW_DIR, "official-ts-df.csv"),
+        official_stations_gdf=path.join(DATA_RAW_DIR, "official-stations.gpkg"),
         agglom_extent=rules.agglom_extent.output,
         notebook=path.join(NOTEBOOKS_DIR, OFFICIAL_DATA_IPYNB_BASENAME),
     output:
@@ -50,6 +51,8 @@ rule official_data:
     shell:
         "papermill {input.notebook} {output.notebook}"
         " -p agglom_extent_filepath {input.agglom_extent}"
+        " -p official_ts_df_filepath {input.official_ts_df}"
+        " -p official_stations_gdf_filepath {input.official_stations_gdf}"
         " -p dst_ts_df_filepath {output.ts_df}"
         " -p dst_stations_gdf_filepath {output.stations_gdf}"
 

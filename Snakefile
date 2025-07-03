@@ -11,6 +11,8 @@ DATA_RAW_DIR = path.join(DATA_DIR, "raw")
 DATA_INTERIM_DIR = path.join(DATA_DIR, "interim")
 DATA_PROCESSED_DIR = path.join(DATA_DIR, "processed")
 
+FIGURES_DIR = path.join("reports", "figures")
+
 
 # 0. conda/mamba environment -----------------------------------------------------------
 rule create_environment:
@@ -168,7 +170,32 @@ rule regular_grid:
         " -p dst_filepath {output.regular_grid}"
 
 
-# 3. compute land features --------------------------------------------------------------
+# 2. exploratory data analysis ---------------------------------------------------------
+UHI_EDA_IPYNB_BASENAME = "uhi-eda.ipynb"
+
+
+rule uhi_eda:
+    input:
+        agglom_extent=rules.agglom_extent.output,
+        ts_df=rules.merge_official_cws_data.output.ts_df,
+        stations_gdf=rules.merge_official_cws_data.output.stations_gdf,
+        notebook=path.join(NOTEBOOKS_DIR, UHI_EDA_IPYNB_BASENAME),
+    output:
+        fig_t_ts_filepath=path.join(FIGURES_DIR, "t-ts.pdf"),
+        fig_uhi_ts_filepath=path.join(FIGURES_DIR, "uhi-ts.pdf"),
+        fig_uhi_maps_filepath=path.join(FIGURES_DIR, "uhi-maps.png"),
+        notebook=path.join(NOTEBOOKS_OUTPUT_DIR, UHI_EDA_IPYNB_BASENAME),
+    shell:
+        "papermill {input.notebook} {output.notebook}"
+        " -p agglom_extent_filepath {input.agglom_extent}"
+        " -p ts_df_filepath {input.ts_df}"
+        " -p stations_gdf_filepath {input.stations_gdf}"
+        " -p dst_t_ts_filepath {output.fig_t_ts_filepath}"
+        " -p dst_uhi_ts_filepath {output.fig_uhi_ts_filepath}"
+        " -p dst_uhi_maps_filepath {output.fig_uhi_maps_filepath}"
+
+
+# 3. compute land features -------------------------------------------------------------
 BUFFER_DISTS_YML = path.join(DATA_RAW_DIR, "buffer-dists.yml")
 SITES_GDF_DICT = {
     "stations": rules.merge_official_cws_data.output.stations_gdf,
@@ -176,7 +203,9 @@ SITES_GDF_DICT = {
 }
 
 
-# note that we do not need `agglom_extent` as input, we could use the convex hull of the stations/grid, however if we use the same "region" when computing the features, many of the intermediate results can be reused
+# note that we do not need `agglom_extent` as input, we could use the convex hull of the
+# stations/grid, however if we use the same "region" when computing the features, many
+# of the intermediate results can be reused
 rule _compute_land_features:
     input:
         agglom_extent=rules.agglom_extent.output,
@@ -205,3 +234,60 @@ rule compute_land_features:
             path.join(DATA_PROCESSED_DIR, "{sites}-features.csv"),
             sites=["stations", "grid"],
         ),
+
+
+# 4. results ---------------------------------------------------------------------------
+# 4.1 features PCA ---------------------------------------------------------------------
+FEATURES_PCA_IPYNB_BASENAME = "features-pca.ipynb"
+
+
+rule features_pca:
+    input:
+        stations_gdf=rules.merge_official_cws_data.output.stations_gdf,
+        station_features=path.join(DATA_PROCESSED_DIR, "stations-features.csv"),
+        ts_df=rules.merge_official_cws_data.output.ts_df,
+        grid_gdf=rules.regular_grid.output.regular_grid,
+        grid_features=path.join(DATA_PROCESSED_DIR, "grid-features.csv"),
+        notebook=path.join(NOTEBOOKS_DIR, FEATURES_PCA_IPYNB_BASENAME),
+    output:
+        fig_feature_scatter_filepath=path.join(FIGURES_DIR, "feature-scatter.pdf"),
+        fig_pca_loadings_filepath=path.join(FIGURES_DIR, "pca-loadings.pdf"),
+        notebook=path.join(NOTEBOOKS_OUTPUT_DIR, STATION_FEATURES_PCA_IPYNB_BASENAME),
+    shell:
+        "papermill {input.notebook} {output.notebook}"
+        " -p stations_gdf_filepath {input.stations_gdf}"
+        " -p station_features_filepath {input.station_features}"
+        " -p ts_df_filepath {input.ts_df}"
+        " -p grid_gdf_filepath {input.grid_gdf}"
+        " -p grid_features_filepath {input.grid_features}"
+        " -p dst_feature_scatter_filepath {output.fig_feature_scatter_filepath}"
+        " -p dst_pca_loadings_filepath {output.pca_fig_loadings_filepath}"
+
+
+# 4.2 UHI regression -------------------------------------------------------------------
+UHI_REGRESSION_IPYNB_BASENAME = "uhi-regression.ipynb"
+
+
+rule uhi_regression:
+    input:
+        stations_gdf=rules.merge_official_cws_data.output.stations_gdf,
+        station_features=path.join(DATA_PROCESSED_DIR, "stations-features.csv"),
+        ts_df=rules.merge_official_cws_data.output.ts_df,
+        grid_gdf=rules.regular_grid.output.regular_grid,
+        grid_features=path.join(DATA_PROCESSED_DIR, "grid-features.csv"),
+        notebook=path.join(NOTEBOOKS_DIR, UHI_REGRESSION_IPYNB_BASENAME),
+    output:
+        fig_regr_plot_filepath=path.join(FIGURES_DIR, "regr-plot.pdf"),
+        fig_regr_betas_filepath=path.join(FIGURES_DIR, "regr-betas.pdf"),
+        fig_regr_maps_filepath=path.join(FIGURES_DIR, "regr-maps.png"),
+        notebook=path.join(NOTEBOOKS_OUTPUT_DIR, UHI_REGRESSION_IPYNB_BASENAME),
+    shell:
+        "papermill {input.notebook} {output.notebook}"
+        " -p stations_gdf_filepath {input.stations_gdf}"
+        " -p station_features_filepath {input.station_features}"
+        " -p ts_df_filepath {input.ts_df}"
+        " -p grid_gdf_filepath {input.grid_gdf}"
+        " -p grid_features_filepath {input.grid_features}"
+        " -p dst_regr_plot_filepath {output.fig_regr_plot_filepath}"
+        " -p dst_regr_betas_filepath {output.fig_regr_betas_filepath}"
+        " -p dst_regr_maps_filepath {output.fig_regr_maps_filepath}"

@@ -225,6 +225,8 @@ def compare_maps(
     vmax: float = None,
     cmap: str = "coolwarm",
     legend: bool = True,
+    region_gdf: gpd.GeoDataFrame | None = None,
+    **region_plot_kwargs: KwargsType,
 ) -> mpl.figure.Figure:
     """Side-by-side plot of maps of a variable.
 
@@ -285,8 +287,17 @@ def compare_maps(
         vmin = station_var_gdf[var_label].min()
     if vmax is None:
         vmax = station_var_gdf[var_label].max()
+
     # common extent
-    extent = station_var_gdf.total_bounds
+    if region_gdf is not None:
+        _ = region_plot_kwargs.pop("ax", None)
+        for ax in axes:
+            region_gdf.plot(ax=ax, **region_plot_kwargs)
+
+        # extent = region_gdf.buffer(100).total_bounds
+        extent = region_gdf.total_bounds
+    else:
+        extent = station_var_gdf.total_bounds
 
     for (source, source_gdf), ax in zip(station_var_gb, axes):
         ax.set_xlim(extent[[0, 2]])

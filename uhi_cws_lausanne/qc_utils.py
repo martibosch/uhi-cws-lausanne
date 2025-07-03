@@ -27,13 +27,14 @@ def per_heatwave_qc(
         max_prop_threshold=radiative_error_max_prop_threshold,
     )
 
-    # daily z peak station kwargs
-    daily_z_peak_stations_kwargs = dict(
-        lower_alpha=lower_alpha,
-        upper_alpha=upper_alpha,
-    )
+    # # daily z peak station kwargs
+    # daily_z_peak_stations_kwargs = dict(
+    #     lower_alpha=lower_alpha,
+    #     upper_alpha=upper_alpha,
+    # )
 
-    qc_keys = ["unreliable", "radiative_error", "daily_z_peak", "indoor"]
+    # qc_keys = ["unreliable", "radiative_error", "daily_z_peak", "indoor"]
+    qc_keys = ["unreliable", "radiative_error", "indoor"]
     qc_dict = {qc_key: {} for qc_key in qc_keys}
     heatwave_ts_dfs = []
     for heatwave, heatwave_ts_df in ts_df.groupby(level="heatwave"):
@@ -41,7 +42,7 @@ def per_heatwave_qc(
             heatwave_ts_df.droplevel("heatwave"),
             unreliable_threshold=unreliable_threshold,
             radiative_error_stations_kwargs=radiative_error_stations_kwargs,
-            daily_z_peak_stations_kwargs=daily_z_peak_stations_kwargs,
+            # daily_z_peak_stations_kwargs=daily_z_peak_stations_kwargs,
             station_indoor_corr_threshold=station_indoor_corr_threshold,
             replace_outliers=True,
             replacement_value=np.nan,
@@ -54,7 +55,8 @@ def per_heatwave_qc(
             .reset_index()
             .set_index(["heatwave", "time"])
         )
-        for qc_key in heatwave_qc_dict:
+        # for qc_key in heatwave_qc_dict:
+        for qc_key in qc_keys:
             qc_dict[qc_key][heatwave] = heatwave_qc_dict[qc_key]
 
     return pd.concat(heatwave_ts_dfs), qc_dict

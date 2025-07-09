@@ -6,8 +6,40 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import spreg
+from pandas.api import types as pd_types
 from pysal.lib import weights
 from sklearn import feature_selection, linear_model, preprocessing
+
+
+def get_site_features_gdf(
+    site_features_filepath, sites_gdf_filepath, *, extra_columns="source"
+):
+    """Get site features as a geo-data frame."""
+    # process extra columns argument
+    if pd_types.is_list_like(extra_columns):
+        extra_columns = list(extra_columns)
+    elif isinstance(extra_columns, str):
+        extra_columns = [extra_columns]
+    else:
+        extra_columns = []
+    # read site locations
+    site_features_gdf = gpd.read_file(sites_gdf_filepath)
+    # get the site id column label
+    site_id_col = site_features_gdf.columns.difference(["geometry"] + extra_columns)[0]
+    # read the site features and merge them based on the site id column
+    site_features_gdf = site_features_gdf.merge(
+        pd.read_csv(site_features_filepath), on=site_id_col
+    )
+    # # useful to use below
+    # feature_cols = site_features_gdf.columns.difference(
+    #     ["geometry", "source", site_id_col]
+    # )
+    # set the site id as index
+    site_features_gdf = site_features_gdf.set_index(site_id_col)
+    # # show the data frame
+    # site_features_gdf.head()
+
+    return site_features_gdf  # , feature_cols
 
 
 def weights_from_gser(sample_gser):

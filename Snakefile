@@ -177,8 +177,8 @@ UHI_EDA_IPYNB_BASENAME = "uhi-eda.ipynb"
 rule uhi_eda:
     input:
         agglom_extent=rules.agglom_extent.output,
-        ts_df=rules.merge_official_cws_data.output.ts_df,
         stations_gdf=rules.merge_official_cws_data.output.stations_gdf,
+        ts_df=rules.merge_official_cws_data.output.ts_df,
         notebook=path.join(NOTEBOOKS_DIR, UHI_EDA_IPYNB_BASENAME),
     output:
         fig_t_ts_filepath=path.join(FIGURES_DIR, "t-ts.pdf"),
@@ -188,8 +188,8 @@ rule uhi_eda:
     shell:
         "papermill {input.notebook} {output.notebook}"
         " -p agglom_extent_filepath {input.agglom_extent}"
-        " -p ts_df_filepath {input.ts_df}"
         " -p stations_gdf_filepath {input.stations_gdf}"
+        " -p ts_df_filepath {input.ts_df}"
         " -p dst_t_ts_filepath {output.fig_t_ts_filepath}"
         " -p dst_uhi_ts_filepath {output.fig_uhi_ts_filepath}"
         " -p dst_uhi_maps_filepath {output.fig_uhi_maps_filepath}"
@@ -245,19 +245,17 @@ rule features_pca:
     input:
         stations_gdf=rules.merge_official_cws_data.output.stations_gdf,
         station_features=path.join(DATA_PROCESSED_DIR, "stations-features.csv"),
-        ts_df=rules.merge_official_cws_data.output.ts_df,
         grid_gdf=rules.regular_grid.output.regular_grid,
         grid_features=path.join(DATA_PROCESSED_DIR, "grid-features.csv"),
         notebook=path.join(NOTEBOOKS_DIR, FEATURES_PCA_IPYNB_BASENAME),
     output:
         fig_feature_scatter_filepath=path.join(FIGURES_DIR, "feature-scatter.pdf"),
         fig_pca_loadings_filepath=path.join(FIGURES_DIR, "pca-loadings.pdf"),
-        notebook=path.join(NOTEBOOKS_OUTPUT_DIR, STATION_FEATURES_PCA_IPYNB_BASENAME),
+        notebook=path.join(NOTEBOOKS_OUTPUT_DIR, FEATURES_PCA_IPYNB_BASENAME),
     shell:
         "papermill {input.notebook} {output.notebook}"
         " -p stations_gdf_filepath {input.stations_gdf}"
         " -p station_features_filepath {input.station_features}"
-        " -p ts_df_filepath {input.ts_df}"
         " -p grid_gdf_filepath {input.grid_gdf}"
         " -p grid_features_filepath {input.grid_features}"
         " -p dst_feature_scatter_filepath {output.fig_feature_scatter_filepath}"

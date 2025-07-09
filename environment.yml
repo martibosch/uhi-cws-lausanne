@@ -13,6 +13,7 @@ dependencies:
   - pip:
       - -e .
       - https://github.com/martibosch/meteora/archive/main.zip
+      - https://github.com/martibosch/multilandpy/archive/main.zip
       - swisstopopy=0.1.0
   - pdal=2.8.4
   - pre-commit

@@ -1,5 +1,6 @@
 <!-- prettier-ignore-start -->
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/martibosch/uhi-cws-lausanne/main.svg)](https://results.pre-commit.ci/latest/github/martibosch/uhi-cws-lausanne/main)
 [![GitHub license](https://img.shields.io/github/license/martibosch/uhi-cws-lausanne.svg)](https://github.com/martibosch/uhi-cws-lausanne/blob/main/LICENSE)
 
 <!-- prettier-ignore-end -->
@@ -8,54 +9,16 @@
 
 Analysis of the urban heat island (UHI) effect in Lausanne using citizen weather stations (CWS).
 
-## Requirements
+![t-pred](https://github.com/martibosch/uhi-cws-lausanne/raw/main/reports/figures/t-t-mean-maps.png)
 
-- [mamba](https://github.com/mamba-org/mamba), which can be installed using conda or [mambaforge](https://github.com/conda-forge/miniforge#mambaforge) (see [the official installation instructions](https://github.com/mamba-org/mamba#installation))
-- [snakemake](https://snakemake.github.io), which can be installed using [conda or mamba](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)
+See the following *key* notebooks:
 
-## Instructions
+- Download Netatmo CWS data using [meteora](https://github.com/martibosch/meteora): [notebooks/cws-download-data.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/cws-download-data.ipynb)
+- Quality control (QC) of CWS data using [meteora](https://github.com/martibosch/meteora): [notebooks/cws-qc.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/cws-qc.ipynb)
+- Exploratory data analysis (EDA) of the urban temperature: [notebooks/uhi-eda.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/uhi-eda.ipynb)
+- *Land use regression* linking temperature to spatial preditors: [notebooks/t-regression.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/t-regression.ipynb)
 
-1. Create a conda environment:
-
-```bash
-snakemake -c1 create_environment
-```
-
-2. Activate it (if using conda, replace `mamba` for `conda`):
-
-```bash
-mamba activate uhi-cws-lausanne
-```
-
-3. Register the IPython kernel for Jupyter:
-
-```bash
-snakemake -c1 register_ipykernel
-```
-
-4. Create a git repository:
-
-```bash
-git init
-```
-
-5. Activate pre-commit for the git repository:
-
-```bash
-pre-commit install
-pre-commit install --hook-type commit-msg
-```
-
-6. Create the first commit:
-
-```bash
-git add .
-git commit -m "feat: initial commit"
-```
-
-7. Enjoy! :rocket:
-
-_Optional_: if you are using GitHub, you can set up [pre-commit.ci](https://pre-commit.ci) as a continuous integration service for pre-commit.
+as well as the [Snakefile](https://github.com/martibosch/uhi-cws-lausanne/raw/main/Snakefile) for the overall orchestration of the computation pipeline.
 
 ## Acknowledgments
 

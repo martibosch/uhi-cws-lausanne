@@ -13,10 +13,10 @@ Analysis of the urban heat island (UHI) effect in Lausanne using citizen weather
 
 See the following *key* notebooks:
 
-- Download Netatmo CWS data using [meteora](https://github.com/martibosch/meteora): [notebooks/cws-download-data.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/cws-download-data.ipynb)
 - Quality control (QC) of CWS data using [meteora](https://github.com/martibosch/meteora): [notebooks/cws-qc.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/cws-qc.ipynb)
-- Exploratory data analysis (EDA) of the urban temperature: [notebooks/uhi-eda.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/uhi-eda.ipynb)
-- *Land use regression* linking temperature to spatial preditors: [notebooks/t-regression.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/t-regression.ipynb)
+- Exploratory data analysis (EDA) of the station temperatures: [notebooks/eda.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/eda.ipynb)
+- *Land use regression* linking temperature to spatial predictors: [notebooks/land-use-regression.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/land-use-regression.ipynb)
+- Principal component analysis (PCA) of the spatial predictors: [notebooks/features-pca.ipynb](https://github.com/martibosch/uhi-cws-lausanne/blob/main/notebooks/features-pca.ipynb)
 
 as well as the [Snakefile](https://github.com/martibosch/uhi-cws-lausanne/raw/main/Snakefile) for the overall orchestration of the computation pipeline.
 

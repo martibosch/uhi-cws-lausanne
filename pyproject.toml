@@ -6,9 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "uhi-cws-lausanne"
 version = "0.1.0"
 description = "Analysis of the urban heat island (UHI) effect in Lausanne using citizen weather stations (CWS)"
-authors = [{name = "Martí Bosch", email = "marti.bosch@epfl.ch"}]
+authors = [{ name = "Martí Bosch", email = "marti.bosch@epfl.ch" }]
 readme = "README.md"
-license = {text = "GPL-3.0-only"}
+license = { text = "GPL-3.0-only" }
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Programming Language :: Python :: 3",
